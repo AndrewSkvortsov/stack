@@ -1,0 +1,6 @@
+@IntegrationExternalCompany_HostAddress = http://localhost:1320
+
+GET {{IntegrationExternalCompany_HostAddress}}/api/
+Accept: application/json
+
+###

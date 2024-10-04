@@ -1,0 +1,37 @@
+version: '3.7'
+networks:
+  default:
+    driver: bridge
+
+volumes:
+  pgdata:
+
+services:
+  bki-broker_web:
+    container_name: bki-broker_web
+    image: "docker.leasoft.ru/demo/bki-broker:latest"
+    environment:
+      DOTNET_ENVIRONMENT: Production
+      ConnectionStrings__Db: Server=bki-broker_db;Database=bki-broker;UserId=bki-broker;Password=bki-broker;
+    ports:
+      - "10810:10810"
+    restart: unless-stopped
+    depends_on:
+      - bki-broker_db
+    networks:
+      - default
+
+  bki-broker_db:
+    container_name: bki-broker_db
+    image: postgres:16.4
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    environment:
+      - "POSTGRES_USER=bki-broker"
+      - "POSTGRES_PASSWORD=bki-broker"
+      - "POSTGRES_DB=bki-broker"
+    ports:
+      - "10819:5432"
+    restart: unless-stopped
+    networks:
+      - default
