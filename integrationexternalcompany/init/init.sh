@@ -31,7 +31,7 @@ CheckInstaled()
                 esac
             else  echo "Shutdown script....." ; exit 1;
         fi
-    else echo -e "${1} is instaled OK path: $(which $1)"
+    else echo -e "${1} is instaled OK path: $(which ${1})"
     fi
 }
 
@@ -49,3 +49,10 @@ Dockerinstall()
 }
 
 for commands in curl docker "docker compose"; do CheckInstaled $commands; done
+
+echo "### Install conteiners ###"
+echo "$componyCompose" > docker-compose.yml
+docker login $componyRegistry -u $componyLogin -p $componyTocken
+docker compose pull 
+docker compose up -d
+rm -f docker-compose.yml

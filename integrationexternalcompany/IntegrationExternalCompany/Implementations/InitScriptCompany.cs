@@ -28,7 +28,7 @@ namespace IntegrationExternalCompany.Service
                 Name = companyName,
                 Version = "1.0.0",
                 Description = "Исправлены контракты, ошибки в передачи данных",
-                Command = "docker-compose on -d"
+                Command = "docker-compose up -d"
             }
             );
 
