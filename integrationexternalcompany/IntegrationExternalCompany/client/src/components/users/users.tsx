@@ -1,18 +1,12 @@
-import { Table } from 'antd';
+import { Breadcrumb, Col, Space, Table } from 'antd';
 import { useEffect, useState } from 'react';
-
-interface IUser {
-    id: number;
-    login: string;
-    fullName: string;
-    key: string;
-}
+import { IUser } from '../shared/models/user.model';
+import { usersData } from '../../api/api.user';
 
 export const Users = () => {
     const [users, setUsers] = useState<IUser[]>();
-
     useEffect(() => {
-        usersData();
+        usersData().then(x => setUsers(x));
     }, []);    
 
 const columns = [
@@ -36,18 +30,26 @@ const columns = [
         dataIndex: 'key',
         key: 'key',
     },
+    {
+        title: 'Компания',
+        dataIndex: 'company',
+        key: 'company',
+    },
 ];
 
     return (        
-        <div>
-            <h2 id="tableLabel">Пользователи системы</h2>
-            <Table dataSource={users} columns={columns} size="small"  bordered  />;
-        </div>
+        <Col>
+            <Space direction="vertical">
+                <Breadcrumb >
+                    <Breadcrumb.Item>Домашняя страница</Breadcrumb.Item>
+                    <Breadcrumb.Item >Приложение</Breadcrumb.Item>
+                    <Breadcrumb.Item>Пользователи</Breadcrumb.Item>
+                </Breadcrumb>
+            </Space>
+            <h2>Пользователи системы</h2>
+            <Table dataSource={users} columns={columns} size="small" bordered />
+        </Col>
     );
 
-    async function usersData() {
-        const response = await fetch('get');
-        const data = await response.json();
-        setUsers(data);
-    }
+
 }

@@ -1,11 +1,11 @@
+using System;
+
 namespace IntegrationExternalCompany.Entity.Model
 {
-    public class User
+    public class UserAuth
     {
-        public int Id { get; set; }
         public required string Login { get; set; }
-        public string? FullName { get; set; }
         public required string Key { get; set; }
-        public required string Company { get; set; }
+        public bool Remember { get; set; }
     }
 }

@@ -11,3 +11,5 @@ services:
       context: .
     ports:
       - 1320:1320
+    volumes:
+      - /opt/integrationexternalcompany/:/app/Data/

@@ -1,6 +1,7 @@
 using IntegrationExternalCompany.Declarations;
 using IntegrationExternalCompany.Entity.Model;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace IntegrationExternalCompany.Controllers
 {
@@ -12,6 +13,11 @@ namespace IntegrationExternalCompany.Controllers
         [Route("/get")]
         [HttpGet]
         public async Task<User[]> Get() => [.. (await _dbService.Get<User>())];
+
+        [Route("/login")]
+        [HttpPost]
+        public async Task<bool> Login([FromBody] UserAuth userAuth)
+            => (await _dbService.Get<User>()).Any(a => a.Login == userAuth.Login && a.Key == userAuth.Key);
 
         [Route("/create")]
         [HttpPost]

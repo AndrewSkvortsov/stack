@@ -1,18 +1,28 @@
 import { Button, Checkbox, Col, Form, Input, Layout, Row } from 'antd';
 import { Content } from 'antd/es/layout/layout';
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { AuthContext } from '../provider/authContext';
+import { useContext } from 'react';
+import { isAuthUser } from '../../api/api.user';
+import { toast, ToastContainer } from 'react-toastify';
 const { Header } = Layout;
+
 export const Login = () => {
+    const { authenticated, setAuthenticated } = useContext(AuthContext)
     const navigate = useNavigate();
-    const onFinish = async (values: any) => {
-        console.log("values", values);
-        if (values.login === 'ЭкономЛизинг') { navigate("/"); }
-        else { alert("Не правильное имя пользователя или пароль"); }
+    const location = useLocation(); 
+    const from = location.state?.from?.pathname || '/home'; 
+    
+    const onFinish = (values: any) => {
+        isAuthUser(values).then(x => setAuthenticated (x) );
+        if (authenticated) { navigate(from, { replace: true }); }
+        else {toast.error("Не правильное имя пользователя или пароль"); }
     };
+
     const onFinishFailed = (errorInfo: any) => {
-        console.log('Failed:', errorInfo); 
+        toast.error("Ошибка:  " + errorInfo);
     };
-//Todo refactoting
+
     return <Layout style={{backgroundColor: "white"} }>
         <Header style={{
             position: 'sticky',
@@ -26,36 +36,38 @@ export const Login = () => {
             >
             <div />
         </Header>
-        <Content>
+    <Content>
         <Row style={{ marginTop: "10px" }}>
-
             <Col span={8} offset={8}>
                 <Form
                     name="login-form"
-                    labelCol={{ span: 8 }}
+                    labelCol={{ span: 16 }}
                     wrapperCol={{ span: 16 }}
                     initialValues={{ remember: true }}
                     onFinish={onFinish}
                     onFinishFailed={onFinishFailed}
                     autoComplete="off"
                 >
-                        <div style={{margin: "35px 100px 1px 45px "}} >
-                            <h2>
-                                Интеграция продуктов
-                            </h2>
-                        </div>
-                        <div style={{ margin: "5px" }}>Логин</div>
-                        <Form.Item
+                        <Col span={14} offset={2}>
+                            <Row >
+                                <h2>
+                                    Интеграция продуктов
+                                </h2>
+                            </Row>
+                        </Col>
 
+                        <Row>Логин</Row>
+                        <Form.Item
                             name="login"
-                                rules={[{ required: true, message: <div style={{fontSize:'12px'}}>Введите логин</div> }]}
+                            rules={[{ required: true, message: "Введите логин" }]}
                         >
                             <Input />
                         </Form.Item>
-                        <div style={{ margin: "5px" }}>Пароль</div>
+                        
+                        <Row>Пароль</Row>
                         <Form.Item
-                            name="password"
-                            rules={[{ required: true, message: <div style={{fontSize:'12px'}}>Введите пароль</div> }]}
+                            name="key"
+                            rules={[{ required: true, message:"Введите пароль" }]}
                         >
                             <Input.Password />
                         </Form.Item>
@@ -69,9 +81,8 @@ export const Login = () => {
                         </Form.Item>
                 </Form>
             </Col>
-            </Row >
-            </Content>
-    </Layout>  
+        </Row >
+        </Content>
+        <ToastContainer autoClose={1500} />
+</Layout>  
 };
-
-export const Component = () => <Login />;
